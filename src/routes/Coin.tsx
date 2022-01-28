@@ -1,6 +1,15 @@
-import { useLocation, useParams } from "react-router-dom";
+import {
+  useLocation,
+  useParams,
+  useMatch,
+  Routes,
+  Route,
+  Link,
+} from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+import Chart from "./Chart";
+import Price from "./Price";
 
 function Coin() {
   const [loading, setLoading] = useState(true);
@@ -8,6 +17,8 @@ function Coin() {
   const { state } = useLocation() as RouteState;
   const [info, setInfo] = useState<InfoData>();
   const [priceInfo, setPriceInfo] = useState<PriceData>();
+  const chartMatch = useMatch(`/${coinId}/chart`);
+  const priceMatch = useMatch(`/${coinId}/price`);
 
   useEffect(() => {
     (async () => {
@@ -24,8 +35,6 @@ function Coin() {
       setLoading(false);
     })();
   }, []);
-
-  console.log(info);
 
   return (
     <Container>
@@ -66,6 +75,19 @@ function Coin() {
               <Content>{priceInfo?.max_supply.toLocaleString()}</Content>
             </OverView>
           </Bottom>
+          <Tabs>
+            <Tab isActive={chartMatch !== null}>
+              <Link to={`/${coinId}/chart`}>Chart</Link>
+            </Tab>
+            <Tab isActive={priceMatch !== null}>
+              <Link to={`/${coinId}/price`}>Price</Link>
+            </Tab>
+          </Tabs>
+
+          <Routes>
+            <Route path="chart" element={<Chart />} />
+            <Route path="price" element={<Price />} />
+          </Routes>
         </>
       )}
     </Container>
@@ -136,6 +158,34 @@ const Description = styled.h2`
 const Bottom = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
+`;
+
+const Tabs = styled.div`
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
+
+const Tab = styled.div<{ isActive: boolean }>`
+  text-align: center;
+  padding: 20px;
+  margin: 0px 10px;
+  font-size: 20px;
+  border-bottom: 1px solid white;
+  color: ${(props) =>
+    props.isActive ? props.theme.accentColor : props.theme.textColor};
+
+  border-bottom: 2px solid
+    ${(props) =>
+      props.isActive ? props.theme.accentColor : props.theme.bgColor};
+
+  a {
+    display: block;
+  }
+
+  :hover {
+    color: ${(props) => props.theme.accentColor};
+  }
 `;
 
 interface RouteState {
