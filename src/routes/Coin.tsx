@@ -13,8 +13,6 @@ import Price from "./Price";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 
-type IParams = { coinId: string };
-
 function Coin() {
   const { coinId } = useParams() as IParams;
   const { state } = useLocation() as RouteState;
@@ -157,7 +155,7 @@ const Bottom = styled.div`
 `;
 
 const Tabs = styled.div`
-  margin-top: 20px;
+  margin: 20px 0px;
   display: grid;
   grid-template-columns: 1fr 1fr;
 `;
@@ -183,6 +181,8 @@ const Tab = styled.div<{ isActive: boolean }>`
     color: ${(props) => props.theme.accentColor};
   }
 `;
+
+type IParams = { coinId: string };
 
 interface RouteState {
   state: {
