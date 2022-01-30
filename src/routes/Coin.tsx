@@ -10,37 +10,33 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import Chart from "./Chart";
 import Price from "./Price";
+import { useQuery } from "react-query";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
+
+type IParams = { coinId: string };
 
 function Coin() {
-  const [loading, setLoading] = useState(true);
-  const { coinId } = useParams();
+  const { coinId } = useParams() as IParams;
   const { state } = useLocation() as RouteState;
-  const [info, setInfo] = useState<InfoData>();
-  const [priceInfo, setPriceInfo] = useState<PriceData>();
   const chartMatch = useMatch(`/${coinId}/chart`);
   const priceMatch = useMatch(`/${coinId}/price`);
 
-  useEffect(() => {
-    (async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId!)
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
+    ["tickers", coinId],
+    () => fetchCoinTickers(coinId!)
+  );
 
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
-
-      setInfo(infoData);
-      setPriceInfo(priceData);
-      setLoading(false);
-    })();
-  }, []);
+  const loading = infoLoading || tickersLoading;
 
   return (
     <Container>
       <Header>
         <Title>
-          {state?.name ? state.name : loading ? "Loading..." : info?.name}
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
       {loading ? (
@@ -50,29 +46,29 @@ function Coin() {
           <Top>
             <OverView>
               <SubHeader>Rank</SubHeader>
-              <Content>{info?.rank}</Content>
+              <Content>{infoData?.rank}</Content>
             </OverView>
             <OverView>
               <SubHeader>Symbol</SubHeader>
-              <Content>{info?.symbol}</Content>
+              <Content>{infoData?.symbol}</Content>
             </OverView>
             <OverView>
               <SubHeader>Open Source</SubHeader>
-              <Content>{info?.open_source.toString()}</Content>
+              <Content>{infoData?.open_source.toString()}</Content>
             </OverView>
           </Top>
           <Description>
             <SubHeader>Description:</SubHeader>
-            {info?.description}
+            {infoData?.description}
           </Description>
           <Bottom>
             <OverView>
               <SubHeader>Total Supply</SubHeader>
-              <Content>{priceInfo?.total_supply.toLocaleString()}</Content>
+              <Content>{tickersData?.total_supply.toLocaleString()}</Content>
             </OverView>
             <OverView>
               <SubHeader>Max Supply</SubHeader>
-              <Content>{priceInfo?.max_supply.toLocaleString()}</Content>
+              <Content>{tickersData?.max_supply.toLocaleString()}</Content>
             </OverView>
           </Bottom>
           <Tabs>
