@@ -5,12 +5,15 @@ import {
   Routes,
   Route,
   Link,
+  useNavigate,
 } from "react-router-dom";
 import styled from "styled-components";
 import Chart from "./Chart";
 import Price from "./Price";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
+import { Helmet } from "react-helmet";
+import { ReactComponent as BackIcon } from "../assets/long_left.svg";
 
 function Coin() {
   const { coinId } = useParams() as IParams;
@@ -24,13 +27,30 @@ function Coin() {
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
     ["tickers", coinId],
-    () => fetchCoinTickers(coinId!)
+    () => fetchCoinTickers(coinId!),
+    { refetchInterval: 5000 }
   );
 
   const loading = infoLoading || tickersLoading;
 
+  const navigate = useNavigate();
+  const goBack = () => {
+    navigate(-1);
+  };
+
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </title>
+      </Helmet>
+      <Back>
+        <BackBtn onClick={goBack}>
+          <BackIcon />
+          Back
+        </BackBtn>
+      </Back>
       <Header>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
@@ -50,8 +70,8 @@ function Coin() {
               <Content>{infoData?.symbol}</Content>
             </OverView>
             <OverView>
-              <SubHeader>Open Source</SubHeader>
-              <Content>{infoData?.open_source.toString()}</Content>
+              <SubHeader>Price</SubHeader>
+              <Content>${tickersData?.quotes.USD.price.toFixed(2)}</Content>
             </OverView>
           </Top>
           <Description>
@@ -96,11 +116,37 @@ const Container = styled.div`
 `;
 
 const Header = styled.header`
-  height: 10vh;
-  margin: 20px 0px;
+  margin: 20px 0px 40px 0px;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+`;
+
+const Back = styled.div`
+  margin: 30px 10px 20px 10px;
+`;
+
+const BackBtn = styled.button`
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  padding: 10px;
+
+  svg {
+    margin-right: 8px;
+    fill: white;
+  }
+
+  :hover {
+    color: ${(props) => props.theme.accentColor};
+    background-color: ${(props) => props.theme.darkBgColor};
+    transition: background-color 0.3s ease-in;
+  }
+
+  :hover svg {
+    fill: ${(props) => props.theme.accentColor};
+  }
 `;
 
 const Loading = styled.div`
@@ -156,6 +202,7 @@ const Bottom = styled.div`
 const Tabs = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
+  margin-top: 30px;
 `;
 
 const Tab = styled.div<{ isActive: boolean }>`
