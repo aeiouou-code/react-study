@@ -1,4 +1,8 @@
-function Price() {
+interface PriceProps {
+  coinId: string;
+}
+
+function Price({ coinId }: PriceProps) {
   return <div>Price</div>;
 }
 

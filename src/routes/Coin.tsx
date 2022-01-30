@@ -7,7 +7,6 @@ import {
   Link,
 } from "react-router-dom";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
 import Chart from "./Chart";
 import Price from "./Price";
 import { useQuery } from "react-query";
@@ -79,8 +78,8 @@ function Coin() {
           </Tabs>
 
           <Routes>
-            <Route path="chart" element={<Chart />} />
-            <Route path="price" element={<Price />} />
+            <Route path="chart" element={<Chart coinId={coinId} />} />
+            <Route path="price" element={<Price coinId={coinId} />} />
           </Routes>
         </>
       )}
@@ -155,7 +154,6 @@ const Bottom = styled.div`
 `;
 
 const Tabs = styled.div`
-  margin: 20px 0px;
   display: grid;
   grid-template-columns: 1fr 1fr;
 `;
