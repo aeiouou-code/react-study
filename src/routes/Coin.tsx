@@ -13,7 +13,6 @@ import Price from "./Price";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { Helmet } from "react-helmet";
-import { ReactComponent as BackIcon } from "../assets/long_left.svg";
 
 function Coin() {
   const { coinId } = useParams() as IParams;
@@ -46,10 +45,7 @@ function Coin() {
         </title>
       </Helmet>
       <Back>
-        <BackBtn onClick={goBack}>
-          <BackIcon />
-          Back
-        </BackBtn>
+        <BackBtn onClick={goBack}>Back</BackBtn>
       </Back>
       <Header>
         <Title>
@@ -124,14 +120,17 @@ const Header = styled.header`
 `;
 
 const Back = styled.div`
-  margin: 30px 10px 20px 10px;
+  margin: 20px 10px;
 `;
 
 const BackBtn = styled.button`
   display: flex;
+  justify-content: center;
   align-items: center;
   border-radius: 5px;
   padding: 10px;
+  background-color: ${(props) => props.theme.cardColor};
+  font-weight: 500;
 
   svg {
     margin-right: 8px;
@@ -140,12 +139,12 @@ const BackBtn = styled.button`
 
   :hover {
     color: ${(props) => props.theme.accentColor};
-    background-color: ${(props) => props.theme.darkBgColor};
-    transition: background-color 0.3s ease-in;
+    transition: color 0.3s ease-in;
   }
 
   :hover svg {
     fill: ${(props) => props.theme.accentColor};
+    transition: fill 0.3s ease-in;
   }
 `;
 
@@ -154,9 +153,9 @@ const Loading = styled.div`
 `;
 
 const Title = styled.h1`
-  color: ${(props) => props.theme.accentColor};
-  font-size: 48px;
-  font-weight: 600;
+  color: ${(props) => props.theme.textColor};
+  font-size: 45px;
+  font-weight: 700;
 `;
 
 const Top = styled.div`
@@ -173,7 +172,7 @@ const SubHeader = styled.div`
 const Content = styled.div`
   font-size: 23px;
   font-weight: 500;
-  color: white;
+  color: ${(props) => props.theme.textColor};
 `;
 
 const OverView = styled.div`
@@ -183,7 +182,8 @@ const OverView = styled.div`
   flex-direction: column;
   padding: 20px;
   margin: 0px 10px;
-  background-color: ${(props) => props.theme.darkBgColor};
+  background-color: ${(props) => props.theme.cardColor};
+  border: 1px solid ${(props) => props.theme.cardBorderColor};
   border-radius: 10px;
 `;
 
@@ -192,6 +192,7 @@ const Description = styled.h2`
   padding: 0px 10px;
   font-size: 17px;
   line-height: 1.3;
+  font-weight: 400;
 `;
 
 const Bottom = styled.div`
