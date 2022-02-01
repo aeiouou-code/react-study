@@ -3,15 +3,25 @@ import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import { fetchCoins, ICON_URL } from "../api";
 import { Helmet } from "react-helmet";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 function Coins() {
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+  const isDark = useRecoilValue(isDarkAtom);
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
 
   return (
     <Container>
       <Helmet>
         <title>Coin</title>
       </Helmet>
+      <ToggleBtn>
+        <button onClick={toggleDarkAtom}>
+          {isDark ? "Light Mode" : "Dark Mode"}
+        </button>
+      </ToggleBtn>
       <Header>
         <Title>Coin</Title>
       </Header>
@@ -42,6 +52,25 @@ const Container = styled.div`
   padding: 0px 20px;
   max-width: 480px;
   margin: 0 auto;
+`;
+
+const ToggleBtn = styled.div`
+  display: flex;
+  justify-content: end;
+  margin-top: 20px;
+
+  button {
+    padding: 10px;
+    background-color: ${(props) => props.theme.cardColor};
+    font-weight: 500;
+    font-size: 14px;
+    border-radius: 5px;
+
+    :hover {
+      background-color: ${(props) => props.theme.accentColor};
+      transition: background-color 0.4s;
+    }
+  }
 `;
 
 const Header = styled.header`
