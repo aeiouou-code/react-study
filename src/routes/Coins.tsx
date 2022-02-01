@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
-import { fetchCoins } from "../api";
+import { fetchCoins, ICON_URL } from "../api";
 import { Helmet } from "react-helmet";
 
 function Coins() {
@@ -24,7 +23,7 @@ function Coins() {
             <Coin key={coin.id}>
               <Link to={`/${coin.id}`} state={{ name: coin.name }}>
                 <Img
-                  src={`https://cryptoicon-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                  src={`${ICON_URL}/${coin.symbol.toLowerCase()}`}
                   alt="icon"
                 />
                 {coin.name} &rarr;
@@ -46,10 +45,11 @@ const Container = styled.div`
 `;
 
 const Header = styled.header`
-  height: 10vh;
+  margin: 40px 0px;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 700;
 `;
 
 const Loading = styled.div`
@@ -59,8 +59,8 @@ const Loading = styled.div`
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: white;
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.cardColor};
+  color: ${(props) => props.theme.textColor};
   margin-bottom: 10px;
   border-radius: 15px;
   font-size: 18px;

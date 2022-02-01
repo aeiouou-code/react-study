@@ -80,6 +80,7 @@ function Chart({ coinId }: ChartProps) {
 }
 
 const Loading = styled.div`
+  margin: 30px 0px;
   text-align: center;
 `;
 

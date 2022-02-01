@@ -1,4 +1,5 @@
 const BASE_URL = `https://api.coinpaprika.com/v1`;
+export const ICON_URL = `https://cryptoicon-api.vercel.app/api/icon`;
 
 export async function fetchCoins() {
   return fetch(`${BASE_URL}/coins`).then((response) => response.json());
