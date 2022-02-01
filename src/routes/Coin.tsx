@@ -130,6 +130,7 @@ const BackBtn = styled.button`
   border-radius: 5px;
   padding: 10px;
   background-color: ${(props) => props.theme.cardColor};
+  border: 1px solid ${(props) => props.theme.cardBorderColor};
   font-weight: 500;
 
   svg {
